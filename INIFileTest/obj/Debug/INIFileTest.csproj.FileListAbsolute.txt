@@ -1,0 +1,9 @@
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\bin\Debug\INIFileTest.exe.config
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\bin\Debug\INIFileTest.exe
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\bin\Debug\INIFileTest.pdb
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\obj\Debug\INIFileTest.Form1.resources
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\obj\Debug\INIFileTest.Properties.Resources.resources
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\obj\Debug\INIFileTest.csproj.GenerateResource.Cache
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\obj\Debug\INIFileTest.exe
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\obj\Debug\INIFileTest.pdb
+C:\Users\admin\documents\visual studio 2012\Projects\SerialCommunication\INIFileTest\obj\Debug\INIFileTest.csprojResolveAssemblyReference.cache

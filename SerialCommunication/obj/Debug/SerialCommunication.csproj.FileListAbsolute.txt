@@ -1,0 +1,9 @@
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\bin\Debug\SerialCommunication.exe.config
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\bin\Debug\SerialCommunication.exe
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\bin\Debug\SerialCommunication.pdb
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.csprojResolveAssemblyReference.cache
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.Form1.resources
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.Properties.Resources.resources
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.csproj.GenerateResource.Cache
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.exe
+c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.pdb
