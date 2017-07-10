@@ -54,7 +54,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.txtSend = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.txtRcv = new System.Windows.Forms.TextBox();
+            this.txtRcv = new System.Windows.Forms.RichTextBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnSend = new System.Windows.Forms.Button();
@@ -65,6 +65,8 @@
             this.tsStopBits = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsParity = new System.Windows.Forms.ToolStripStatusLabel();
             this.timeSend = new System.Windows.Forms.Timer(this.components);
+            this.cbSendHex = new System.Windows.Forms.CheckBox();
+            this.txtStrTo16 = new System.Windows.Forms.TextBox();
             this.gpbSend.SuspendLayout();
             this.gpbReceive.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -74,7 +76,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 16);
+            this.label1.Location = new System.Drawing.Point(20, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 15);
             this.label1.TabIndex = 0;
@@ -84,16 +86,16 @@
             // 
             this.cbSerial.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSerial.FormattingEnabled = true;
-            this.cbSerial.Location = new System.Drawing.Point(75, 13);
+            this.cbSerial.Location = new System.Drawing.Point(83, 18);
             this.cbSerial.Name = "cbSerial";
-            this.cbSerial.Size = new System.Drawing.Size(121, 23);
+            this.cbSerial.Size = new System.Drawing.Size(136, 23);
             this.cbSerial.TabIndex = 1;
             // 
             // btnSwitch
             // 
-            this.btnSwitch.Location = new System.Drawing.Point(212, 9);
+            this.btnSwitch.Location = new System.Drawing.Point(247, 12);
             this.btnSwitch.Name = "btnSwitch";
-            this.btnSwitch.Size = new System.Drawing.Size(75, 27);
+            this.btnSwitch.Size = new System.Drawing.Size(127, 32);
             this.btnSwitch.TabIndex = 2;
             this.btnSwitch.Text = "打开串口";
             this.btnSwitch.UseVisualStyleBackColor = true;
@@ -101,9 +103,9 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(312, 9);
+            this.btnSave.Location = new System.Drawing.Point(392, 12);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 27);
+            this.btnSave.Size = new System.Drawing.Size(127, 32);
             this.btnSave.TabIndex = 3;
             this.btnSave.Text = "保存设置";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -112,7 +114,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 57);
+            this.label2.Location = new System.Drawing.Point(20, 73);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 15);
             this.label2.TabIndex = 4;
@@ -121,7 +123,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 93);
+            this.label3.Location = new System.Drawing.Point(20, 112);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 15);
             this.label3.TabIndex = 5;
@@ -141,9 +143,9 @@
             "19200",
             "38400",
             "115200"});
-            this.cbBaudRate.Location = new System.Drawing.Point(75, 54);
+            this.cbBaudRate.Location = new System.Drawing.Point(86, 70);
             this.cbBaudRate.Name = "cbBaudRate";
-            this.cbBaudRate.Size = new System.Drawing.Size(121, 23);
+            this.cbBaudRate.Size = new System.Drawing.Size(132, 23);
             this.cbBaudRate.TabIndex = 6;
             // 
             // cbStop
@@ -154,15 +156,15 @@
             "1",
             "1.5",
             "2"});
-            this.cbStop.Location = new System.Drawing.Point(75, 93);
+            this.cbStop.Location = new System.Drawing.Point(86, 112);
             this.cbStop.Name = "cbStop";
-            this.cbStop.Size = new System.Drawing.Size(121, 23);
+            this.cbStop.Size = new System.Drawing.Size(132, 23);
             this.cbStop.TabIndex = 7;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(199, 57);
+            this.label4.Location = new System.Drawing.Point(282, 73);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(67, 15);
             this.label4.TabIndex = 8;
@@ -171,7 +173,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(199, 93);
+            this.label5.Location = new System.Drawing.Point(282, 117);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(67, 15);
             this.label5.TabIndex = 9;
@@ -186,9 +188,9 @@
             "6",
             "7",
             "8"});
-            this.cbDataBits.Location = new System.Drawing.Point(272, 54);
+            this.cbDataBits.Location = new System.Drawing.Point(364, 70);
             this.cbDataBits.Name = "cbDataBits";
-            this.cbDataBits.Size = new System.Drawing.Size(121, 23);
+            this.cbDataBits.Size = new System.Drawing.Size(132, 23);
             this.cbDataBits.TabIndex = 10;
             // 
             // cbParity
@@ -199,16 +201,16 @@
             "无",
             "奇校验",
             "偶校验"});
-            this.cbParity.Location = new System.Drawing.Point(272, 90);
+            this.cbParity.Location = new System.Drawing.Point(364, 113);
             this.cbParity.Name = "cbParity";
-            this.cbParity.Size = new System.Drawing.Size(121, 23);
+            this.cbParity.Size = new System.Drawing.Size(132, 23);
             this.cbParity.TabIndex = 11;
             // 
             // gpbSend
             // 
             this.gpbSend.Controls.Add(this.rbSendStr);
             this.gpbSend.Controls.Add(this.rbSend16);
-            this.gpbSend.Location = new System.Drawing.Point(15, 123);
+            this.gpbSend.Location = new System.Drawing.Point(23, 155);
             this.gpbSend.Name = "gpbSend";
             this.gpbSend.Size = new System.Drawing.Size(181, 51);
             this.gpbSend.TabIndex = 12;
@@ -236,12 +238,13 @@
             this.rbSend16.TabStop = true;
             this.rbSend16.Text = "16进制";
             this.rbSend16.UseVisualStyleBackColor = true;
+            this.rbSend16.CheckedChanged += new System.EventHandler(this.rbSend16_CheckedChanged);
             // 
             // gpbReceive
             // 
             this.gpbReceive.Controls.Add(this.rbRcvStr);
             this.gpbReceive.Controls.Add(this.rbRcv16);
-            this.gpbReceive.Location = new System.Drawing.Point(212, 123);
+            this.gpbReceive.Location = new System.Drawing.Point(247, 155);
             this.gpbReceive.Name = "gpbReceive";
             this.gpbReceive.Size = new System.Drawing.Size(181, 51);
             this.gpbReceive.TabIndex = 13;
@@ -273,7 +276,7 @@
             // cbTimeSend
             // 
             this.cbTimeSend.AutoSize = true;
-            this.cbTimeSend.Location = new System.Drawing.Point(15, 192);
+            this.cbTimeSend.Location = new System.Drawing.Point(23, 230);
             this.cbTimeSend.Name = "cbTimeSend";
             this.cbTimeSend.Size = new System.Drawing.Size(119, 19);
             this.cbTimeSend.TabIndex = 14;
@@ -283,7 +286,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(170, 193);
+            this.label6.Location = new System.Drawing.Point(244, 234);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(82, 15);
             this.label6.TabIndex = 15;
@@ -291,7 +294,7 @@
             // 
             // txtSecond
             // 
-            this.txtSecond.Location = new System.Drawing.Point(258, 190);
+            this.txtSecond.Location = new System.Drawing.Point(332, 228);
             this.txtSecond.Name = "txtSecond";
             this.txtSecond.Size = new System.Drawing.Size(100, 25);
             this.txtSecond.TabIndex = 16;
@@ -300,7 +303,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(364, 196);
+            this.label7.Location = new System.Drawing.Point(438, 234);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(22, 15);
             this.label7.TabIndex = 17;
@@ -309,7 +312,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 230);
+            this.label8.Location = new System.Drawing.Point(20, 268);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(82, 15);
             this.label8.TabIndex = 18;
@@ -317,16 +320,17 @@
             // 
             // txtSend
             // 
-            this.txtSend.Location = new System.Drawing.Point(12, 248);
+            this.txtSend.Location = new System.Drawing.Point(23, 287);
             this.txtSend.Name = "txtSend";
             this.txtSend.Size = new System.Drawing.Size(381, 25);
             this.txtSend.TabIndex = 19;
+            this.txtSend.TextChanged += new System.EventHandler(this.txtSend_TextChanged);
             this.txtSend.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSend_KeyPress);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.txtRcv);
-            this.groupBox3.Location = new System.Drawing.Point(419, 16);
+            this.groupBox3.Location = new System.Drawing.Point(588, 19);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(388, 328);
             this.groupBox3.TabIndex = 20;
@@ -335,18 +339,17 @@
             // 
             // txtRcv
             // 
-            this.txtRcv.Location = new System.Drawing.Point(0, 25);
-            this.txtRcv.Multiline = true;
+            this.txtRcv.Location = new System.Drawing.Point(7, 25);
             this.txtRcv.Name = "txtRcv";
-            this.txtRcv.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRcv.Size = new System.Drawing.Size(382, 303);
+            this.txtRcv.Size = new System.Drawing.Size(375, 297);
             this.txtRcv.TabIndex = 0;
+            this.txtRcv.Text = "";
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(633, 350);
+            this.btnClear.Location = new System.Drawing.Point(775, 367);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 28);
+            this.btnClear.Size = new System.Drawing.Size(90, 30);
             this.btnClear.TabIndex = 21;
             this.btnClear.Text = "清空";
             this.btnClear.UseVisualStyleBackColor = true;
@@ -354,9 +357,9 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(732, 350);
+            this.btnExit.Location = new System.Drawing.Point(886, 367);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(75, 28);
+            this.btnExit.Size = new System.Drawing.Size(90, 30);
             this.btnExit.TabIndex = 22;
             this.btnExit.Text = "退出";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -364,9 +367,9 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(304, 280);
+            this.btnSend.Location = new System.Drawing.Point(314, 323);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(89, 28);
+            this.btnSend.Size = new System.Drawing.Size(90, 30);
             this.btnSend.TabIndex = 23;
             this.btnSend.Text = "发送";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -380,51 +383,67 @@
             this.tsDataBits,
             this.tsStopBits,
             this.tsParity});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 482);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 427);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(819, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(1040, 22);
             this.statusStrip1.TabIndex = 24;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // tsSpNum
             // 
             this.tsSpNum.Name = "tsSpNum";
-            this.tsSpNum.Size = new System.Drawing.Size(76, 20);
-            this.tsSpNum.Text = "tsSpNum";
+            this.tsSpNum.Size = new System.Drawing.Size(0, 17);
             // 
             // tsBaudRate
             // 
             this.tsBaudRate.Name = "tsBaudRate";
-            this.tsBaudRate.Size = new System.Drawing.Size(91, 20);
-            this.tsBaudRate.Text = "tsBaudRate";
+            this.tsBaudRate.Size = new System.Drawing.Size(0, 17);
             // 
             // tsDataBits
             // 
             this.tsDataBits.Name = "tsDataBits";
-            this.tsDataBits.Size = new System.Drawing.Size(81, 20);
-            this.tsDataBits.Text = "tsDataBits";
+            this.tsDataBits.Size = new System.Drawing.Size(0, 17);
             // 
             // tsStopBits
             // 
             this.tsStopBits.Name = "tsStopBits";
-            this.tsStopBits.Size = new System.Drawing.Size(83, 20);
-            this.tsStopBits.Text = "tsStopBits";
+            this.tsStopBits.Size = new System.Drawing.Size(0, 17);
             // 
             // tsParity
             // 
             this.tsParity.Name = "tsParity";
-            this.tsParity.Size = new System.Drawing.Size(63, 20);
-            this.tsParity.Text = "tsParity";
+            this.tsParity.Size = new System.Drawing.Size(0, 17);
             // 
             // timeSend
             // 
             this.timeSend.Tick += new System.EventHandler(this.timeSend_Tick);
             // 
+            // cbSendHex
+            // 
+            this.cbSendHex.AutoSize = true;
+            this.cbSendHex.Location = new System.Drawing.Point(23, 330);
+            this.cbSendHex.Name = "cbSendHex";
+            this.cbSendHex.Size = new System.Drawing.Size(180, 19);
+            this.cbSendHex.TabIndex = 25;
+            this.cbSendHex.Text = "显示此字符串的16进制";
+            this.cbSendHex.UseVisualStyleBackColor = true;
+            this.cbSendHex.CheckedChanged += new System.EventHandler(this.cbSendHex_CheckedChanged);
+            // 
+            // txtStrTo16
+            // 
+            this.txtStrTo16.Location = new System.Drawing.Point(23, 367);
+            this.txtStrTo16.Name = "txtStrTo16";
+            this.txtStrTo16.ReadOnly = true;
+            this.txtStrTo16.Size = new System.Drawing.Size(381, 25);
+            this.txtStrTo16.TabIndex = 26;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(819, 507);
+            this.ClientSize = new System.Drawing.Size(1040, 449);
+            this.Controls.Add(this.txtStrTo16);
+            this.Controls.Add(this.cbSendHex);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.btnExit);
@@ -459,7 +478,6 @@
             this.gpbReceive.ResumeLayout(false);
             this.gpbReceive.PerformLayout();
             this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -494,7 +512,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtSend;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.TextBox txtRcv;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnSend;
@@ -505,6 +522,9 @@
         private System.Windows.Forms.ToolStripStatusLabel tsStopBits;
         private System.Windows.Forms.ToolStripStatusLabel tsParity;
         private System.Windows.Forms.Timer timeSend;
+        private System.Windows.Forms.RichTextBox txtRcv;
+        private System.Windows.Forms.CheckBox cbSendHex;
+        private System.Windows.Forms.TextBox txtStrTo16;
     }
 }
 

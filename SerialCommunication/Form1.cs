@@ -22,6 +22,8 @@ namespace SerialCommunication
         {
             InitializeComponent();
         }
+
+        #region Form_load
         //窗口加载
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -164,7 +166,9 @@ namespace SerialCommunication
             //关闭串口
                sp1.Close();
         }
+        #endregion
 
+        #region sp1_DataReceived
         /// <summary>
         /// 对接收的数据进行处理的方法
         /// </summary>
@@ -182,50 +186,22 @@ namespace SerialCommunication
                 txtRcv.ForeColor = Color.Blue;
 
                 //BytestoRead:sp1接收的字符个数
-                //byte[] byteRead = new byte[sp1.BytesToRead];
+                byte[] receiveBytes = new byte[sp1.BytesToRead];
+                sp1.Read(receiveBytes, 0, receiveBytes.Length);
+                sp1.DiscardInBuffer();
 
                 //rdRcvStr:"接收字符串"单选按钮
                 if (rbRcvStr.Checked)
                 {
-                    try
-                    {
-                        byte[] strBytes = new byte[sp1.BytesToRead];
-                        sp1.Read(strBytes, 0, strBytes.Length);
-                        sp1.DiscardInBuffer();
-
-                        string receiveStr = System.Text.Encoding.UTF8.GetString(strBytes);
-                        txtRcv.Text += receiveStr + "\r\n";
-
-                        //清空SerialPort控件中的buffer
-                        sp1.DiscardInBuffer();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "异常信息提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtSend.Text = "";
-                    }
+                    string receiveStr = ByteToString(receiveBytes);
+                    txtRcv.AppendText(receiveStr + "\r\n");
                 }
                 else
                 {
                     try
                     {
-                        //创建接收字节数组
-                        Byte[] receiveData = new Byte[sp1.BytesToRead];
-
-                        //读取数据
-                        sp1.Read(receiveData, 0, receiveData.Length);
-
-                        //清空SerialPort控件中的buffer
-                        sp1.DiscardInBuffer();
-
-                        string strRcv = null;
-
-                        for (int i = 0; i < receiveData.Length; i++)
-                        {
-                            //16进制显示
-                            strRcv += String.Format(" {0} ",receiveData[i].ToString("X2"));
-                        }
-                        txtRcv.Text += strRcv+"\r\n";
+                        string strRcv = ByteToHex(receiveBytes);
+                        txtRcv.AppendText(strRcv + "\r\n");
                     }
                     catch (Exception ex)
                     {
@@ -240,6 +216,9 @@ namespace SerialCommunication
             }
         }
 
+        #endregion
+
+        #region btnClear_Click
         /// <summary>
         /// "清空"按钮事件
         /// </summary>
@@ -247,7 +226,9 @@ namespace SerialCommunication
         {
             txtRcv.Text = "";
         }
+        #endregion
 
+        #region btnExit_Click
         /// <summary>
         /// "退出"按钮事件
         /// </summary>
@@ -255,7 +236,9 @@ namespace SerialCommunication
         {
             Application.Exit();
         }
+        #endregion
 
+        #region btnSend_Click
         /// <summary>
         /// 点击“发送按钮”事件
         /// </summary>
@@ -281,74 +264,24 @@ namespace SerialCommunication
 
             if (rbSend16.Checked==true)
             {
-                //如果选择的16进制发送，处理数字转换
-                string sendBuf = strSend;
-                //去除空格，并将原来的中英文逗号替换成空格,最后去掉16进制的0x
-                string sendNoNull = sendBuf.Trim();                
-                string sendNoEComma = sendNoNull.Replace(',', ' ');
-                string sendNoCComma = sendNoEComma.Replace('，', ' ');
-                string strSend16Scale=sendNoCComma.Replace("0x","");
-                strSend16Scale.Replace("0X","");
-
-                //将数据用空格分隔成字符串数组
-                string[] strArray = strSend16Scale.Split(' ');
-
-                int byteBufferLength = strArray.Length;
-
-                for (int i = 0; i < byteBufferLength; i++)
-                {
-                    if (strArray[i]=="")
-                    {
-                        byteBufferLength--;
-                    }
-                }
-
-                byte[] byteBuffer = new byte[byteBufferLength];
-                int ii = 0;
-                for (int i = 0; i < strArray.Length; i++)
-                {
-                    //将获取的字符做相加运算？
-                    Byte[] bytesOfStr = Encoding.Default.GetBytes(strArray[i]);
-
-                    int decNum = 0;
-                    if (strArray[i]=="")
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        decNum = Convert.ToInt32(strArray[i], 16);
-                    }
-
-                    try
-                    {
-                        //为了防止用户输入错误，所以规定用户只能一个字节一个字节的输入数据
-                        byteBuffer[ii] = Convert.ToByte(decNum);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("字节越界，请逐个字节输入！\n"+ex.Message, "异常提示信息",MessageBoxButtons.OK,MessageBoxIcon.Warning);
-                        timeSend.Enabled = false;
-                        return;
-                    }
-
-                    ii++;
-                }
-
+                //如果以16进制形式发送，将16进制数转换为byte数组进行发送
+                byte[] byteBuffer = HexToByte(strSend);
                 sp1.Write(byteBuffer, 0, byteBuffer.Length);
-
             }
             else if(rbSendStr.Checked==true)
             {
-                //以字符串形式发送时,直接写入数据
-                sp1.WriteLine(String.Format("<{0}>",txtSend.Text));                
+                //如果以字符串形式发送，将字符串转换为byte数组进行发送
+                    byte[] byteBuffer = StringToByte(txtSend.Text);
+                    sp1.Write(byteBuffer, 0, byteBuffer.Length);
             }
             else
             {
                 MessageBox.Show("请选择数据发送的格式！", "信息提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+        #endregion
 
+        #region timeSend_Tick
         /// <summary>
         /// 定时发送的定时器Timer
         /// </summary>
@@ -376,7 +309,9 @@ namespace SerialCommunication
                 MessageBox.Show("设置的时间间隔格式错误!\n"+ex.Message, "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        #endregion
 
+        #region btnSwitch_Click
         /// <summary>
         /// 打开/关闭串口的按钮事件
         /// </summary>
@@ -437,11 +372,7 @@ namespace SerialCommunication
                     tsParity.Text = "校验位：" + sp1.Parity;
 
                     //设置必要的控件为不可用状态
-                    cbSerial.Enabled = false;
-                    cbBaudRate.Enabled = false;
-                    cbDataBits.Enabled = false;
-                    cbStop.Enabled = false;
-                    cbParity.Enabled = false;
+                    SettingControls(0);
 
                     //打开串口
                     sp1.Open();
@@ -452,6 +383,9 @@ namespace SerialCommunication
                 {
                     MessageBox.Show("错误：" + ex.Message, "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     timeSend.Enabled = false;
+
+                    //设置必要的控件为可用状态
+                    SettingControls(1);
                     return;                    
                 }
             }
@@ -465,11 +399,7 @@ namespace SerialCommunication
                 tsParity.Text = "校验位：未指定|";
 
                 //恢复控件功能，设置必要控件为可用状态
-                cbSerial.Enabled = true;
-                cbBaudRate.Enabled = true;
-                cbDataBits.Enabled = true;
-                cbStop.Enabled = true;
-                cbParity.Enabled = true;
+                SettingControls(1);
 
                 //关闭串口
                 sp1.Close();
@@ -481,7 +411,9 @@ namespace SerialCommunication
                 timeSend.Enabled = false;
             }
         }
+        #endregion
 
+        #region Form1_FormClosing
         /// <summary>
         /// 程序窗口关闭时的事件
         /// </summary>
@@ -491,8 +423,9 @@ namespace SerialCommunication
             INIFILE.Profile.SaveProfile();
             sp1.Close();
         }
+        #endregion
 
-
+        #region btnSave_Click
         /// <summary>
         /// "保存设置"按钮点击事件
         /// </summary>        
@@ -536,7 +469,9 @@ namespace SerialCommunication
             //保存成功提示
             MessageBox.Show("设置保存成功！","信息提示",MessageBoxButtons.OK,MessageBoxIcon.Information);
         }
+        #endregion
 
+        #region txtSend_KeyPress
         /// <summary>
         /// 对发送框的输入进行校验
         /// </summary>
@@ -545,7 +480,7 @@ namespace SerialCommunication
             if (rbSend16.Checked == true)
             {
                 //正则匹配,\b表示退格键（对16进制的输入进行格式校验）
-                string pattern = "[0-9a-fA-F]|\b|0x|0X|,|，";
+                string pattern = "[0-9a-fA-F]|\b|0x|0X| ";
                 Regex regex = new Regex(pattern);
                 Match match = regex.Match(e.KeyChar.ToString());
 
@@ -563,7 +498,9 @@ namespace SerialCommunication
                 e.Handled = false;
             }
         }
+        #endregion
 
+        #region txtSecond_KeyPress
         /// <summary>
         /// 对定时输入的时间进行校验
         /// </summary>
@@ -580,6 +517,110 @@ namespace SerialCommunication
             else
             {
                 e.Handled = true;
+            }
+        }
+        #endregion
+
+        #region Method ByteToHex and HexToByte
+        //byte字节数组转16进制
+        private string ByteToHex(byte[] comByte)
+        {
+            StringBuilder builder = new StringBuilder(comByte.Length * 3);
+
+            foreach (byte data in comByte)
+            {
+                builder.Append(Convert.ToString(data,16).PadLeft(2,'0').PadRight(3,' '));
+            }
+            return builder.ToString().ToUpper();
+        }
+
+        //16进制转字节数组
+        private byte[] HexToByte(string msg)
+        {
+            msg = msg.Replace(" ", "");
+            msg = msg.Replace("0x", "");
+            msg = msg.Replace("0X", "");
+            byte[] comBuffer = new byte[msg.Length / 2];
+
+            for (int i = 0; i < msg.Length; i+=2)
+            {
+                comBuffer[i / 2] = (byte)Convert.ToByte(msg.Substring(i, 2), 16);
+            }
+            return comBuffer;
+        }
+
+        //字符串转字节型数组
+        private byte[] StringToByte(string msgtxt)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(msgtxt);
+        }
+
+        //字节型数组转字符串
+        private string ByteToString(byte[] buffer)
+        {
+            return System.Text.Encoding.UTF8.GetString(buffer);
+        }
+        #endregion
+
+        #region rbSend16_CheckedChanged
+        //当发送方式发生变化时更改cbSendHex的可用状态并清空当前发送框的内容
+        private void rbSend16_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbSend16.Checked==true)
+            {
+                cbSendHex.Enabled = false;
+                txtStrTo16.Text = "";
+            }
+            else
+            {
+                cbSendHex.Enabled = true;
+            }
+            txtSend.Text = "";
+        }
+        #endregion
+
+        #region Method SettingControls
+        //用于设置控件的可用状态，canUse 参数-> 1：可用  0：不可用
+        private void SettingControls(int canUse)
+        {
+            if (canUse==1)
+            {
+                cbSerial.Enabled = true;
+                cbBaudRate.Enabled = true;
+                cbDataBits.Enabled = true;
+                cbStop.Enabled = true;
+                cbParity.Enabled = true;
+            }
+            else if(canUse==0)
+            {
+                cbSerial.Enabled = false;
+                cbBaudRate.Enabled = false;
+                cbDataBits.Enabled = false;
+                cbStop.Enabled = false;
+                cbParity.Enabled = false;
+            }
+        }
+        #endregion
+
+        //用于监听cbSendHex按钮的状态
+        private void cbSendHex_CheckedChanged(object sender, EventArgs e)
+        {
+            //如果cbSendHex按钮选中就翻译发送框的内容
+            if (cbSendHex.Checked==true)
+            {
+                txtStrTo16.Text = ByteToHex(StringToByte(txtSend.Text));
+            }
+            else
+            {
+                txtStrTo16.Text = "";
+            }
+        }
+        //用于监听txtSend的文本输入，如果txtSend内容发生变化，txtStrTo16实时将字符串翻译为16进制
+        private void txtSend_TextChanged(object sender, EventArgs e)
+        {
+            if (cbSendHex.Checked == true&&rbSend16.Checked==false)
+            {
+                txtStrTo16.Text = ByteToHex(StringToByte(txtSend.Text));
             }
         }
     }
