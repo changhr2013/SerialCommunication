@@ -187,15 +187,23 @@ namespace SerialCommunication
                 //rdRcvStr:"接收字符串"单选按钮
                 if (rbRcvStr.Checked)
                 {
-                    byte[] strBytes = new byte[sp1.BytesToRead];
-                    sp1.Read(strBytes, 0, strBytes.Length);
-                    sp1.DiscardInBuffer();
+                    try
+                    {
+                        byte[] strBytes = new byte[sp1.BytesToRead];
+                        sp1.Read(strBytes, 0, strBytes.Length);
+                        sp1.DiscardInBuffer();
 
-                    string receiveStr = System.Text.Encoding.UTF8.GetString(strBytes);
-                    txtRcv.Text += receiveStr + "\r\n";
+                        string receiveStr = System.Text.Encoding.UTF8.GetString(strBytes);
+                        txtRcv.Text += receiveStr + "\r\n";
 
-                    //清空SerialPort控件中的buffer
-                    sp1.DiscardInBuffer();
+                        //清空SerialPort控件中的buffer
+                        sp1.DiscardInBuffer();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "异常信息提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        txtSend.Text = "";
+                    }
                 }
                 else
                 {
