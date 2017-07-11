@@ -322,7 +322,7 @@
             // 
             this.txtSend.Location = new System.Drawing.Point(23, 287);
             this.txtSend.Name = "txtSend";
-            this.txtSend.Size = new System.Drawing.Size(381, 25);
+            this.txtSend.Size = new System.Drawing.Size(496, 25);
             this.txtSend.TabIndex = 19;
             this.txtSend.TextChanged += new System.EventHandler(this.txtSend_TextChanged);
             this.txtSend.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSend_KeyPress);
@@ -330,24 +330,24 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.txtRcv);
-            this.groupBox3.Location = new System.Drawing.Point(588, 19);
+            this.groupBox3.Location = new System.Drawing.Point(547, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(388, 328);
+            this.groupBox3.Size = new System.Drawing.Size(451, 328);
             this.groupBox3.TabIndex = 20;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "接收方";
             // 
             // txtRcv
             // 
-            this.txtRcv.Location = new System.Drawing.Point(7, 25);
+            this.txtRcv.Location = new System.Drawing.Point(0, 25);
             this.txtRcv.Name = "txtRcv";
-            this.txtRcv.Size = new System.Drawing.Size(375, 297);
+            this.txtRcv.Size = new System.Drawing.Size(445, 297);
             this.txtRcv.TabIndex = 0;
             this.txtRcv.Text = "";
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(775, 367);
+            this.btnClear.Location = new System.Drawing.Point(789, 367);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(90, 30);
             this.btnClear.TabIndex = 21;
@@ -357,7 +357,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(886, 367);
+            this.btnExit.Location = new System.Drawing.Point(908, 367);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(90, 30);
             this.btnExit.TabIndex = 22;
@@ -367,7 +367,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(314, 323);
+            this.btnSend.Location = new System.Drawing.Point(429, 323);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(90, 30);
             this.btnSend.TabIndex = 23;
@@ -385,7 +385,7 @@
             this.tsParity});
             this.statusStrip1.Location = new System.Drawing.Point(0, 427);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1040, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1024, 22);
             this.statusStrip1.TabIndex = 24;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -434,14 +434,14 @@
             this.txtStrTo16.Location = new System.Drawing.Point(23, 367);
             this.txtStrTo16.Name = "txtStrTo16";
             this.txtStrTo16.ReadOnly = true;
-            this.txtStrTo16.Size = new System.Drawing.Size(381, 25);
+            this.txtStrTo16.Size = new System.Drawing.Size(496, 25);
             this.txtStrTo16.TabIndex = 26;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1040, 449);
+            this.ClientSize = new System.Drawing.Size(1024, 449);
             this.Controls.Add(this.txtStrTo16);
             this.Controls.Add(this.cbSendHex);
             this.Controls.Add(this.statusStrip1);

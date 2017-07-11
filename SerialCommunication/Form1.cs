@@ -16,14 +16,60 @@ namespace SerialCommunication
 {
     public partial class Form1 : Form
     {
-        SerialPort sp1 = new SerialPort();
+        #region 日志记录，在richtextbox中显示不同颜色文字的方法
+
+        public delegate void LogAppendDelegate(Color color, string text);
+
+        //追加显示文本
+        public void LogAppend(Color color, string msg)
+        {
+            txtRcv.SelectionColor = color;
+            txtRcv.AppendText(msg);
+            txtRcv.AppendText("\n");
+        }
+
+        //显示错误信息
+        public void LogError(string msg)
+        {
+            LogAppendDelegate lad = new LogAppendDelegate(LogAppend);
+            txtRcv.Invoke(lad,Color.Red,DateTime.Now.ToString("HH:mm:ss ")+msg);
+        }
+
+        //显示警告信息
+        public void LogWarning(string msg)
+        {
+            LogAppendDelegate lad = new LogAppendDelegate(LogAppend);
+            txtRcv.Invoke(lad,Color.Violet,DateTime.Now.ToString("HH:mm:ss ")+msg);
+        }
+
+        //显示信息
+        public void LogMessage(string msg)
+        {
+            LogAppendDelegate lad = new LogAppendDelegate(LogAppend);
+            txtRcv.Invoke(lad,Color.Black,DateTime.Now.ToString("HH:mm:ss ")+msg);
+        }
+        //发送信息的设置
+        public void SendMessage(string msg)
+        {
+            LogAppendDelegate lad = new LogAppendDelegate(LogAppend);
+            txtRcv.Invoke(lad, Color.Green, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss ") + msg);
+        }
+        //接收信息的设置
+        public void RcvMessage(string msg)
+        {
+            LogAppendDelegate lad = new LogAppendDelegate(LogAppend);
+            txtRcv.Invoke(lad, Color.Blue, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss ") + msg);
+        }
+        #endregion
+
+        SerialPort serialPort = new SerialPort();
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        #region Form_load
+        #region Form_load 窗口加载
         //窗口加载
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -62,7 +108,8 @@ namespace SerialCommunication
                     break;
                 default:
                     {
-                        MessageBox.Show("波特率预置参数错误。", "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("波特率预置参数错误。", "异常提示信息", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
             }
@@ -84,7 +131,8 @@ namespace SerialCommunication
                     break;
                 default:
                     {
-                        MessageBox.Show("数据位预置参数错误。", "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("数据位预置参数错误。", "异常提示信息", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
@@ -103,7 +151,8 @@ namespace SerialCommunication
                     break;
                 default:
                     {
-                        MessageBox.Show("停止位预置参数错误。", "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("停止位预置参数错误。", "异常提示信息", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
             }
@@ -122,7 +171,8 @@ namespace SerialCommunication
                     break;
                 default:
                     {
-                        MessageBox.Show("校验位预置参数错误。","异常提示信息",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        MessageBox.Show("校验位预置参数错误。","异常提示信息",
+                            MessageBoxButtons.OK,MessageBoxIcon.Warning);
                         return;
                     }
             }
@@ -131,7 +181,8 @@ namespace SerialCommunication
                string[] str = SerialPort.GetPortNames();  
                if (str == null)  
                {  
-                   MessageBox.Show("本机没有串口！", "信息提示",MessageBoxButtons.OK,MessageBoxIcon.Information);  
+                   MessageBox.Show("本机没有串口！", "信息提示",
+                       MessageBoxButtons.OK,MessageBoxIcon.Information);  
                    return;  
                }  
       
@@ -145,80 +196,73 @@ namespace SerialCommunication
                //串口设置默认选择项  
                //设置cbSerial的默认选项  
                cbSerial.SelectedIndex = 0;
-               sp1.BaudRate = 9600;
+               serialPort.BaudRate = 9600;
 
             //这个类中不检查跨线程的调用是否合法
             /*.NET2.0以后加强了安全机制，不允许在WinForm中直接跨线程访问控件的属性*/
                Control.CheckForIllegalCrossThreadCalls = false;
 
-               sp1.DataReceived += new SerialDataReceivedEventHandler(sp1_DataReceived);
+               serialPort.DataReceived += new SerialDataReceivedEventHandler(sp1_DataReceived);
 
             //发送和接收格式默认是字符串
                rbSendStr.Checked = true;
                rbRcvStr.Checked = true;
 
             //设置数据读取超时为1秒
-               sp1.ReadTimeout = 1000;
+               serialPort.ReadTimeout = 1000;
 
             //设置编码
-               sp1.Encoding = System.Text.Encoding.GetEncoding("UTF-8");
+               //serialPort.Encoding = System.Text.Encoding.GetEncoding("UTF-8");
 
             //关闭串口
-               sp1.Close();
+               serialPort.Close();
         }
         #endregion
 
-        #region sp1_DataReceived
+        #region sp1_DataReceived 处理接收数据
         /// <summary>
         /// 对接收的数据进行处理的方法
         /// </summary>
         void sp1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (sp1.IsOpen)
+            if (serialPort.IsOpen)
             {
-                //输出当前时间
-                DateTime dateTime = DateTime.Now;
-
-                txtRcv.Text += dateTime.GetDateTimeFormats('f')[0].ToString() + "\r\n";
-
-                //改变前景色为蓝色
-                txtRcv.SelectAll();
-                txtRcv.ForeColor = Color.Blue;
-
                 //BytestoRead:sp1接收的字符个数
-                byte[] receiveBytes = new byte[sp1.BytesToRead];
-                sp1.Read(receiveBytes, 0, receiveBytes.Length);
-                sp1.DiscardInBuffer();
+                byte[] receiveBytes = new byte[serialPort.BytesToRead];
+                serialPort.Read(receiveBytes, 0, receiveBytes.Length);
+                serialPort.DiscardInBuffer();
 
                 //rdRcvStr:"接收字符串"单选按钮
                 if (rbRcvStr.Checked)
                 {
                     string receiveStr = ByteToString(receiveBytes);
-                    txtRcv.AppendText(receiveStr + "\r\n");
+                    RcvMessage(receiveStr);
                 }
                 else
                 {
                     try
                     {
                         string strRcv = ByteToHex(receiveBytes);
-                        txtRcv.AppendText(strRcv + "\r\n");
+                        RcvMessage(strRcv);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message,"异常提示信息",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        MessageBox.Show(ex.Message,"异常提示信息",
+                            MessageBoxButtons.OK,MessageBoxIcon.Warning);
                         txtSend.Text = "";
                     }
                 }
             }
             else
             {
-                MessageBox.Show("请打开某个串口", "信息提示",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                MessageBox.Show("请打开某个串口", "信息提示",
+                    MessageBoxButtons.OK,MessageBoxIcon.Information);
             }
         }
 
         #endregion
 
-        #region btnClear_Click
+        #region btnClear_Click 清空按钮
         /// <summary>
         /// "清空"按钮事件
         /// </summary>
@@ -228,7 +272,7 @@ namespace SerialCommunication
         }
         #endregion
 
-        #region btnExit_Click
+        #region btnExit_Click 退出按钮
         /// <summary>
         /// "退出"按钮事件
         /// </summary>
@@ -238,16 +282,17 @@ namespace SerialCommunication
         }
         #endregion
 
-        #region btnSend_Click
+        #region btnSend_Click 发送按钮：处理发送数据
         /// <summary>
         /// 点击“发送按钮”事件
         /// </summary>
         private void btnSend_Click(object sender, EventArgs e)
         {
             //发送前判断串口是否打开
-            if (!sp1.IsOpen)
+            if (!serialPort.IsOpen)
             {
-                MessageBox.Show("请先打开串口！","提示信息",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                MessageBox.Show("请先打开串口！","提示信息",
+                    MessageBoxButtons.OK,MessageBoxIcon.Information);
                 return;
             }
             //判断cbTimeSend是否被勾选，来决定是否启动Timer控件进行定时发送
@@ -264,24 +309,36 @@ namespace SerialCommunication
 
             if (rbSend16.Checked==true)
             {
-                //如果以16进制形式发送，将16进制数转换为byte数组进行发送
-                byte[] byteBuffer = HexToByte(strSend);
-                sp1.Write(byteBuffer, 0, byteBuffer.Length);
+                try
+                {
+                    //如果以16进制形式发送，将16进制数转换为byte数组进行发送
+                    byte[] byteBuffer = HexToByte(strSend);
+                    serialPort.Write(byteBuffer, 0, byteBuffer.Length);
+                    SendMessage(ByteToHex(byteBuffer));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("16进制数的格式或长度不正确，请检查格式后重新发送。","信息提示",
+                        MessageBoxButtons.OK,MessageBoxIcon.Information);
+                }
+
             }
             else if(rbSendStr.Checked==true)
             {
                 //如果以字符串形式发送，将字符串转换为byte数组进行发送
                     byte[] byteBuffer = StringToByte(txtSend.Text);
-                    sp1.Write(byteBuffer, 0, byteBuffer.Length);
+                    serialPort.Write(byteBuffer, 0, byteBuffer.Length);
+                    SendMessage(strSend);
             }
             else
             {
-                MessageBox.Show("请选择数据发送的格式！", "信息提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("请选择数据发送的格式！", "信息提示", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         #endregion
 
-        #region timeSend_Tick
+        #region timeSend_Tick 定时器Timer
         /// <summary>
         /// 定时发送的定时器Timer
         /// </summary>
@@ -306,24 +363,25 @@ namespace SerialCommunication
             {
                 //若出现异常，就将Timer控件状态设为不可用，然后抛出异常提示
                 timeSend.Enabled = false;
-                MessageBox.Show("设置的时间间隔格式错误!\n"+ex.Message, "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("设置的时间间隔格式错误!\n"+ex.Message, "异常提示信息", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         #endregion
 
-        #region btnSwitch_Click
+        #region btnSwitch_Click 打开/关闭串口按钮
         /// <summary>
         /// 打开/关闭串口的按钮事件
         /// </summary>
         private void btnSwitch_Click(object sender, EventArgs e)
         {
-            if (!sp1.IsOpen)
+            if (!serialPort.IsOpen)
             {
                 try
                 {
                     //设置串口号
                     string serialName = cbSerial.SelectedItem.ToString();
-                    sp1.PortName = serialName;
+                    serialPort.PortName = serialName;
 
                     //对串口参数进行设置
                     string strBaudRate = cbBaudRate.Text;
@@ -334,54 +392,57 @@ namespace SerialCommunication
                     Int32 iDateBits = Convert.ToInt32(strDateBits);
 
                     //设置波特率
-                    sp1.BaudRate = iBaudRate;
+                    serialPort.BaudRate = iBaudRate;
                     //设置数据位
-                    sp1.DataBits = iDateBits;
+                    serialPort.DataBits = iDateBits;
                     //设置停止位
                     switch (cbStop.Text)
                     {
-                        case "1": sp1.StopBits = StopBits.One; break;
-                        case "1.5": sp1.StopBits = StopBits.OnePointFive; break;
-                        case "2": sp1.StopBits = StopBits.Two; break;                        
+                        case "1": serialPort.StopBits = StopBits.One; break;
+                        case "1.5": serialPort.StopBits = StopBits.OnePointFive; break;
+                        case "2": serialPort.StopBits = StopBits.Two; break;                        
                         default:
-                            MessageBox.Show("停止位参数不正确", "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("停止位参数不正确", "异常提示信息", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             break;
                     }
                     //设置校验位
                     switch (cbParity.Text)
                     {
-                        case "无": sp1.Parity = Parity.None; break;
-                        case "奇校验": sp1.Parity = Parity.Odd; break;
-                        case "偶校验": sp1.Parity = Parity.Even; break;
+                        case "无": serialPort.Parity = Parity.None; break;
+                        case "奇校验": serialPort.Parity = Parity.Odd; break;
+                        case "偶校验": serialPort.Parity = Parity.Even; break;
                         default:
-                            MessageBox.Show("校验位参数不正确！", "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("校验位参数不正确！", "异常提示信息", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             break;
                     }
 
                     //如果串口为打开状态，就先关闭一下来初始化串口
-                    if (sp1.IsOpen==true)
+                    if (serialPort.IsOpen==true)
                     {
-                        sp1.Close();
+                        serialPort.Close();
                     }
 
                     //状态栏设置
-                    tsSpNum.Text = "串口号：" + sp1.PortName + "|";
-                    tsBaudRate.Text = "波特率：" + sp1.BaudRate + "|";
-                    tsDataBits.Text = "数据位：" + sp1.DataBits + "|";
-                    tsStopBits.Text = "停止位：" + sp1.StopBits + "|";
-                    tsParity.Text = "校验位：" + sp1.Parity;
+                    tsSpNum.Text = "串口号：" + serialPort.PortName + "|";
+                    tsBaudRate.Text = "波特率：" + serialPort.BaudRate + "|";
+                    tsDataBits.Text = "数据位：" + serialPort.DataBits + "|";
+                    tsStopBits.Text = "停止位：" + serialPort.StopBits + "|";
+                    tsParity.Text = "校验位：" + serialPort.Parity;
 
                     //设置必要的控件为不可用状态
                     SettingControls(0);
 
                     //打开串口
-                    sp1.Open();
+                    serialPort.Open();
                     //将按钮内容设置为"关闭串口"
                     btnSwitch.Text = "关闭串口";
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("错误：" + ex.Message, "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("错误：" + ex.Message, "异常提示信息", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     timeSend.Enabled = false;
 
                     //设置必要的控件为可用状态
@@ -402,7 +463,7 @@ namespace SerialCommunication
                 SettingControls(1);
 
                 //关闭串口
-                sp1.Close();
+                serialPort.Close();
 
                 //设置按钮内容为"打开串口"
                 btnSwitch.Text = "打开串口";
@@ -413,7 +474,7 @@ namespace SerialCommunication
         }
         #endregion
 
-        #region Form1_FormClosing
+        #region Form1_FormClosing 程序窗口关闭事件
         /// <summary>
         /// 程序窗口关闭时的事件
         /// </summary>
@@ -421,22 +482,20 @@ namespace SerialCommunication
         {
             //保存配置到INI文件，关闭打开的串口
             INIFILE.Profile.SaveProfile();
-            sp1.Close();
+            serialPort.Close();
         }
         #endregion
 
-        #region btnSave_Click
+        #region btnSave_Click 保存设置按钮
         /// <summary>
         /// "保存设置"按钮点击事件
         /// </summary>        
         private void btnSave_Click(object sender, EventArgs e)
         {
             //设置各"串口设置"
-            string strBaudRate = cbBaudRate.Text;
-            string strDataBits = cbDataBits.Text;
             string strStopBits = cbStop.Text;
-            Int32 iBaudRate = Convert.ToInt32(strBaudRate);
-            Int32 iDataBits = Convert.ToInt32(strDataBits);
+            Int32 iBaudRate = Convert.ToInt32(cbBaudRate.Text);
+            Int32 iDataBits = Convert.ToInt32(cbDataBits.Text);
 
             //保存波特率设置
             Profile.G_BAUDRATE = iBaudRate + "";
@@ -449,7 +508,8 @@ namespace SerialCommunication
                 case "1.5": Profile.G_STOP = "1.5"; break;
                 case "2": Profile.G_STOP = "2"; break;
                 default:
-                    MessageBox.Show("停止位参数不正确", "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("停止位参数不正确", "异常提示信息", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
             }
             //保存校验位设置
@@ -459,7 +519,8 @@ namespace SerialCommunication
                 case "奇校验": Profile.G_PARITY = "ODD"; break;
                 case "偶校验": Profile.G_PARITY = "EVEN"; break;
                 default:
-                    MessageBox.Show("校验位参数不正确", "异常提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("校验位参数不正确", "异常提示信息", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
             }
 
@@ -467,11 +528,12 @@ namespace SerialCommunication
             Profile.SaveProfile();
 
             //保存成功提示
-            MessageBox.Show("设置保存成功！","信息提示",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            MessageBox.Show("设置保存成功！","信息提示",
+                MessageBoxButtons.OK,MessageBoxIcon.Information);
         }
         #endregion
 
-        #region txtSend_KeyPress
+        #region txtSend_KeyPress 发送框输入校验
         /// <summary>
         /// 对发送框的输入进行校验
         /// </summary>
@@ -500,7 +562,7 @@ namespace SerialCommunication
         }
         #endregion
 
-        #region txtSecond_KeyPress
+        #region txtSecond_KeyPress 定时输入校验
         /// <summary>
         /// 对定时输入的时间进行校验
         /// </summary>
@@ -521,7 +583,8 @@ namespace SerialCommunication
         }
         #endregion
 
-        #region Method ByteToHex and HexToByte
+        #region Method ByteToHex and HexToByte Byte字节数组、Hex16进制和字符串之间转换的方法
+
         //byte字节数组转16进制
         private string ByteToHex(byte[] comByte)
         {
@@ -540,6 +603,7 @@ namespace SerialCommunication
             msg = msg.Replace(" ", "");
             msg = msg.Replace("0x", "");
             msg = msg.Replace("0X", "");
+
             byte[] comBuffer = new byte[msg.Length / 2];
 
             for (int i = 0; i < msg.Length; i+=2)
@@ -562,7 +626,8 @@ namespace SerialCommunication
         }
         #endregion
 
-        #region rbSend16_CheckedChanged
+        #region rbSend16_CheckedChanged 发送方式改变时清空原来的输入框
+
         //当发送方式发生变化时更改cbSendHex的可用状态并清空当前发送框的内容
         private void rbSend16_CheckedChanged(object sender, EventArgs e)
         {
@@ -579,7 +644,7 @@ namespace SerialCommunication
         }
         #endregion
 
-        #region Method SettingControls
+        #region Method SettingControls 设置控件可用状态的方法
         //用于设置控件的可用状态，canUse 参数-> 1：可用  0：不可用
         private void SettingControls(int canUse)
         {
@@ -602,6 +667,7 @@ namespace SerialCommunication
         }
         #endregion
 
+        #region 用于将输入框的字符串实时翻译为16进制
         //用于监听cbSendHex按钮的状态
         private void cbSendHex_CheckedChanged(object sender, EventArgs e)
         {
@@ -615,6 +681,7 @@ namespace SerialCommunication
                 txtStrTo16.Text = "";
             }
         }
+
         //用于监听txtSend的文本输入，如果txtSend内容发生变化，txtStrTo16实时将字符串翻译为16进制
         private void txtSend_TextChanged(object sender, EventArgs e)
         {
@@ -623,5 +690,6 @@ namespace SerialCommunication
                 txtStrTo16.Text = ByteToHex(StringToByte(txtSend.Text));
             }
         }
+        #endregion
     }
 }

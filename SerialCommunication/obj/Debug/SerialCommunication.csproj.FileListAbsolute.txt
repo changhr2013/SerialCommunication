@@ -7,3 +7,12 @@ c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialC
 c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.csproj.GenerateResource.Cache
 c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.exe
 c:\users\admin\documents\visual studio 2012\Projects\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.pdb
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\bin\Debug\SerialCommunication.exe.config
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.exe
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.pdb
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\bin\Debug\SerialCommunication.exe
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\bin\Debug\SerialCommunication.pdb
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.csprojResolveAssemblyReference.cache
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.Form1.resources
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.Properties.Resources.resources
+C:\Users\admin\Desktop\GitHub\SerialCommunication\SerialCommunication\obj\Debug\SerialCommunication.csproj.GenerateResource.Cache
