@@ -67,6 +67,7 @@
             this.timeSend = new System.Windows.Forms.Timer(this.components);
             this.cbSendHex = new System.Windows.Forms.CheckBox();
             this.txtStrTo16 = new System.Windows.Forms.TextBox();
+            this.btnSendCRC = new System.Windows.Forms.Button();
             this.gpbSend.SuspendLayout();
             this.gpbReceive.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -437,11 +438,22 @@
             this.txtStrTo16.Size = new System.Drawing.Size(496, 25);
             this.txtStrTo16.TabIndex = 26;
             // 
+            // btnSendCRC
+            // 
+            this.btnSendCRC.Location = new System.Drawing.Point(255, 323);
+            this.btnSendCRC.Name = "btnSendCRC";
+            this.btnSendCRC.Size = new System.Drawing.Size(144, 30);
+            this.btnSendCRC.TabIndex = 27;
+            this.btnSendCRC.Text = "添加CRC校验发送";
+            this.btnSendCRC.UseVisualStyleBackColor = true;
+            this.btnSendCRC.Click += new System.EventHandler(this.btnSendCRC_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1024, 449);
+            this.Controls.Add(this.btnSendCRC);
             this.Controls.Add(this.txtStrTo16);
             this.Controls.Add(this.cbSendHex);
             this.Controls.Add(this.statusStrip1);
@@ -525,6 +537,7 @@
         private System.Windows.Forms.RichTextBox txtRcv;
         private System.Windows.Forms.CheckBox cbSendHex;
         private System.Windows.Forms.TextBox txtStrTo16;
+        private System.Windows.Forms.Button btnSendCRC;
     }
 }
 

@@ -205,8 +205,13 @@ namespace SerialCommunication
                serialPort.DataReceived += new SerialDataReceivedEventHandler(sp1_DataReceived);
 
             //发送和接收格式默认是字符串
+
+               //rbSend16.Checked = true;
+               //rbRcv16.Checked = true;
+
                rbSendStr.Checked = true;
                rbRcvStr.Checked = true;
+               btnSendCRC.Enabled = false;
 
             //设置数据读取超时为1秒
                serialPort.ReadTimeout = 1000;
@@ -634,11 +639,13 @@ namespace SerialCommunication
             if (rbSend16.Checked==true)
             {
                 cbSendHex.Enabled = false;
+                btnSendCRC.Enabled = true;
                 txtStrTo16.Text = "";
             }
             else
             {
                 cbSendHex.Enabled = true;
+                btnSendCRC.Enabled = false;
             }
             txtSend.Text = "";
         }
@@ -691,5 +698,50 @@ namespace SerialCommunication
             }
         }
         #endregion
+
+        private void btnSendCRC_Click(object sender, EventArgs e)
+        {
+            //发送前判断串口是否打开
+            if (!serialPort.IsOpen)
+            {
+                MessageBox.Show("请先打开串口！", "提示信息",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            //判断cbTimeSend是否被勾选，来决定是否启动Timer控件进行定时发送
+            if (cbTimeSend.Checked)
+            {
+                timeSend.Enabled = true;
+            }
+            else
+            {
+                timeSend.Enabled = false;
+            }
+
+            if (rbSend16.Checked == true)
+            {
+                try
+                {
+                    //如果以16进制带CRC校验形式发送，调用ModbusCRC16的方法将16进制字符串转换为带CRC的字节数组
+                    byte[] byteBuffer=ModbusCRC16.getSendBuf(txtSend.Text);
+
+                    serialPort.Write(byteBuffer, 0, byteBuffer.Length);
+
+                    SendMessage(ByteToHex(byteBuffer));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("16进制数的格式或长度不正确，请检查格式后重新发送。\n"+ex.Message, "信息提示",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("请选择数据发送的格式！", "信息提示",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+        }
     }
 }
